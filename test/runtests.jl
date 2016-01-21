@@ -1,5 +1,7 @@
 using LLRBVisualize
-using Base.Test
+using FactCheck
 
 # write your own tests here
-@test 1 == 1
+@fact 1 == 1 --> true "meh"
+
+FactCheck.exitstatus()
