@@ -2,6 +2,9 @@ using LLRBVisualize
 using FactCheck
 
 # write your own tests here
-@fact 1 == 1 --> true "meh"
+facts("Basic") do
+    @fact 1 == 1 --> true "meh"
+
+end
 
 FactCheck.exitstatus()
