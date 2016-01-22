@@ -19,7 +19,12 @@ notifications:
 after_success:
     - julia -e 'cd(Pkg.dir("LLRBTrees")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
 # uncomment the following lines to override the default test script
-# script:
+script:
  # - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
- # - julia -e 'Pkg.clone("https://github.com/netoelgrande/LLRBTrees.jl"); Pkg.build("LLRBTrees"); using LLRBTrees'
- # - julia -e 'Pkg.clone(pwd()); Pkg.build("LLRBVisualize"); Pkg.test("LLRBVisualize"; coverage=true)'
+ - julia --color=yes -e 'Pkg.clone("https://github.com/netoelgrande/LLRBTrees.jl")'
+ - julia --color=yes -e 'Pkg.build("LLRBTrees")'
+ - julia --color=yes -e 'using LLRBTrees'
+
+ - julia --color=yes -e 'Pkg.clone(pwd())'
+ - julia --color=yes -e "Pkg.build(\"${JL_PKG}\")"
+ - julia --check-bounds=yes --color=yes -e "Pkg.test(\"${JL_PKG}\", coverage=true)"
