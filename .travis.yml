@@ -26,5 +26,5 @@ script:
  - julia --color=yes -e 'using LLRBTrees'
 
  - julia --color=yes -e 'Pkg.clone(pwd())'
- - julia --color=yes -e "Pkg.build(\"${JL_PKG}\")"
+ - julia --color=yes -e "Pkg.build(LLRBTrees)"
  - julia --check-bounds=yes --color=yes -e "Pkg.test(\"${JL_PKG}\", coverage=true)"
