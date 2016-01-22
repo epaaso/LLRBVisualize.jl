@@ -27,4 +27,4 @@ script:
 
  - julia --color=yes -e 'Pkg.clone(pwd())'
  - julia --color=yes -e "Pkg.build(LLRBVisualize)"
- - julia --check-bounds=yes --color=yes -e "Pkg.test(\"${JL_PKG}\", coverage=true)"
+ - julia --check-bounds=yes --color=yes -e "Pkg.test(LLRBVisualize, coverage=true)"
