@@ -8,15 +8,17 @@ export buildstring, draw
 include("GraphViz.jl")
 
 function buildstring{K,V}(tree::LLRBTree{K,V})
+
+    treestring = """
+    digraph tree {
+
+        }
+        """
+    linenow = 16
+
     if(isdefined(tree, :root))
         root=tree.root
         if(!isleaf(root))
-            treestring = """
-            digraph tree {
-
-                }
-                """
-            linenow = 16
 
             nodestring = string(tree.root.value.value)*";\n"
             treestring = replace(treestring, linenow, linenow+1, nodestring)
@@ -31,8 +33,7 @@ function buildstring{K,V}(tree::LLRBTree{K,V})
             end
 
         end
-    else
-        Base.error("root is null")
+
     end
 
     return treestring
