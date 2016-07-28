@@ -18,6 +18,10 @@ function buildstring{K,V}(tree::LLRBTree{K,V})
                 """
             linenow = 16
 
+            nodestring = string(tree.root.value.value)*";\n"
+            treestring = replace(treestring, linenow, linenow+1, nodestring)
+            linenow += length(nodestring)
+
             if(!isleftleaf(root))
                 treestring, linenow = buildstringR(treestring, root.left, root, linenow)
             end
