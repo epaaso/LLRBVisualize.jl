@@ -5,7 +5,7 @@ import Base: replace, display
 
 export buildstring, draw
 
-include("Graphviz.jl")
+include("GraphViz.jl")
 
 
 function replace(original::ASCIIString, start::Int64, fin::Int64, string::ASCIIString)
@@ -80,7 +80,7 @@ function buildstringR{K,V}(treestring::ASCIIString, node::TreeNode{K,V}, parent:
 end
 
 function display{K,V}(tree::LLRBTree{K,V})
-    Graph(buildstring(tree))
+    GraphViz.Graph(buildstring(tree))
 end
 
 

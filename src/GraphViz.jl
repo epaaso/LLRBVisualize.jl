@@ -4,7 +4,7 @@ module GraphViz
     if isfile(joinpath(dirname(@__FILE__),"..","deps","deps.jl"))
         include("../deps/deps.jl")
     else
-        error("GraphViz not properly installed. Please run Pkg.build(\"GraphViz\").")
+        error("GraphViz not properly installed. Please run Pkg.build(\"LLRBVisualize\").")
     end
 
     # Plugin Struct
@@ -285,7 +285,7 @@ module GraphViz
     # Disciplines
 
 
-    immutable Agmemdisc_s      
+    immutable Agmemdisc_s
         #void *(*open) (Agdisc_t*);  /* independent of other resources */
         open::Ptr{Void}
         #void *(*alloc) (void *state, size_t req);
@@ -364,14 +364,14 @@ module GraphViz
 
     type Context
         handle::Ptr{Void}
-        function Context() 
+        function Context()
             this = new(ccall((:gvContext,gvc),Ptr{Void},()))
             finalizer(this,free)
             this
         end
     end
 
-    function free(t::Context) 
+    function free(t::Context)
         if t.handle != C_NULL
             ccall((:gvFreeContext,gvc), Void, (Ptr{Void},), t.handle)
         end
@@ -449,7 +449,7 @@ module GraphViz
         # This function has void return
         nothing
     end
-    function julia_io_finalize(firstjob::Ptr{Void}) 
+    function julia_io_finalize(firstjob::Ptr{Void})
         # Reset the write pointer we changed in julia_io_initialize
         firstjob = convert(Ptr{GVJ_s},firstjob)
         job = unsafe_load(firstjob)
@@ -466,13 +466,13 @@ module GraphViz
     const julia_io_engine = [ gvdevice_engine_t(cfunction(julia_io_initialize,Void,(Ptr{Void},)),C_NULL,cfunction(julia_io_finalize,Void,(Ptr{Void},))) ]
     const julia_io_features = [ gvdevice_features_t((@compat Int32(GVDEVICE_DOES_TRUECOLOR|GVDEVICE_DOES_LAYERS)),0.,0.,0.,0.,72.,72.) ]
     const julia_io_name = "julia_io:svg".data
-    const julia_io_libname = "julia_io".data 
-    const julia_io_device = 
-    [ 
+    const julia_io_libname = "julia_io".data
+    const julia_io_device =
+    [
       gvplugin_installed_t((@compat Int32(0)),pointer(julia_io_name), (@compat Int32(0)), pointer(julia_io_engine), pointer(julia_io_features));
       null(gvplugin_installed_t)
     ]
-    const julia_io_api = 
+    const julia_io_api =
     [
         gvplugin_api_t(API_device, pointer(julia_io_device))
         null(gvplugin_api_t)
@@ -549,13 +549,13 @@ module GraphViz
         const generic_cairo_features = [ gvdevice_features_t((@compat Int32(0)),0.,0.,0.,0.,96.,96.) ]
         const generic_cairo_features_interactive = [ gvdevice_features_t((@compat Int32(0)),0.,0.,0.,0.,96.,96.) ]
         const generic_cairo_name = "julia:cairo".data
-        const generic_cairo_libname = "julia:cairo".data 
-        const generic_cairo_device = 
-        [ 
+        const generic_cairo_libname = "julia:cairo".data
+        const generic_cairo_device =
+        [
           gvplugin_installed_t((@compat Int32(0)),pointer(generic_cairo_name), (@compat Int32(0)), pointer(generic_cairo_engine), pointer(generic_cairo_features));
           null(gvplugin_installed_t)
         ]
-        const generic_cairo_api = 
+        const generic_cairo_api =
         [
             gvplugin_api_t(API_device, pointer(generic_cairo_device))
             null(gvplugin_api_t)
@@ -611,7 +611,7 @@ module GraphViz
                 draw(gtk_update,c)
                 wait() #TODO: Make conditional on closing the widget
                 nothing
-            end 
+            end
 
             function gtk_update(c::Canvas)
                 jobp = c.data::Ptr{GVJ_s}
@@ -628,13 +628,13 @@ module GraphViz
             const gtk_engine = [ gvdevice_engine_t(cfunction(gtk_initialize,Void,(Ptr{Void},)),C_NULL,cfunction(gtk_finalize,Void,(Ptr{Void},))) ]
             const gtk_features = [ gvdevice_features_t(Int32(GVDEVICE_EVENTS),0.,0.,0.,0.,96.,96.) ]
             const gtk_name = "julia_gtk:cairo".data
-            const gtk_libname = "julia_gtk:cairo".data 
-            const gtk_device = 
-            [ 
+            const gtk_libname = "julia_gtk:cairo".data
+            const gtk_device =
+            [
               gvplugin_installed_t(Int32(0),pointer(gtk_name), Int32(0), pointer(gtk_engine), pointer(gtk_features));
               null(gvplugin_installed_t)
             ]
-            const gtk_api = 
+            const gtk_api =
             [
                 gvplugin_api_t(API_device, pointer(gtk_device))
                 null(gvplugin_api_t)
@@ -642,10 +642,10 @@ module GraphViz
 
             add_julia_gtk!(c::Context) = ccall((:gvAddLibrary,gvc),Void,(Ptr{Void},Ptr{gvplugin_library_t}),c.handle,[gvplugin_library_t(pointer(gtk_libname),pointer(gtk_api))])
 
-            function render(c::Gtk.Canvas,cg::Context,g::Graph) 
+            function render(c::Gtk.Canvas,cg::Context,g::Graph)
                 @async begin
                     add_julia_gtk!(cg)
-                    ccall((:gvRenderContext,gvc),Cint,(Ptr{Void},Ptr{Void},Ptr{Uint8},Any),cg.handle,g.handle,"julia_gtk",c)    
+                    ccall((:gvRenderContext,gvc),Cint,(Ptr{Void},Ptr{Void},Ptr{Uint8},Any),cg.handle,g.handle,"julia_gtk",c)
                 end
                 nothing
             end
