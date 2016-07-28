@@ -7,13 +7,6 @@ export buildstring, draw
 
 include("GraphViz.jl")
 
-
-function replace(original::ASCIIString, start::Int64, fin::Int64, string::ASCIIString)
-left = original[1:start]
-right = original[fin:end]
-return left*string*right
-end
-
 function buildstring{K,V}(tree::LLRBTree{K,V})
     if(isdefined(tree, :root))
         root=tree.root
